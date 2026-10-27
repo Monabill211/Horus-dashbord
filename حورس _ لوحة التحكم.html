@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حورس | لوحة التحكم</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--bg:#000;--card:#121110;--line:#2c2616;--gold:#d4af37;--gold2:#f1d680;--text:#f4ecd4;--muted:#9b9274;--ok:#6fcf97;--bad:#ef6b5b;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Cairo,Tahoma,Arial,sans-serif;line-height:1.6}
+header{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--line)}
+header svg{width:44px;height:44px;flex:none}
+.brand{font-size:26px;font-weight:800;color:var(--gold);letter-spacing:1px;line-height:1.1}
+.brand small{display:block;font-size:12px;font-weight:400;color:var(--muted);letter-spacing:0}
+nav{display:flex;gap:6px;padding:10px 14px;overflow-x:auto;border-bottom:1px solid var(--line)}
+nav button{flex:none;background:none;border:1px solid transparent;color:var(--muted);font:600 15px Cairo,Tahoma,sans-serif;padding:8px 16px;border-radius:999px;cursor:pointer}
+nav button.on{color:#000;background:var(--gold);border-color:var(--gold)}
+nav button:focus-visible,.btn:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--gold2);outline-offset:2px}
+main{padding:16px 14px 40px;max-width:980px;margin:auto}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:18px}
+.stat{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--card)}
+.stat b{display:block;font-size:28px;color:var(--gold);line-height:1.2}
+.stat span{font-size:13px;color:var(--muted)}
+h2{font-size:19px;margin:6px 0 12px;color:var(--gold2)}
+.card{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px;margin-bottom:14px}
+form{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;align-items:end}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:3px}
+input,select{width:100%;background:#000;color:var(--text);border:1px solid var(--line);border-radius:8px;padding:9px 10px;font:400 15px Cairo,Tahoma,sans-serif}
+.btn{background:var(--gold);color:#000;border:0;border-radius:8px;padding:9px 16px;font:700 14px Cairo,Tahoma,sans-serif;cursor:pointer}
+.btn.ghost{background:none;color:var(--gold);border:1px solid var(--gold)}
+.btn.sm{padding:5px 12px;font-size:13px}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:520px}
+th,td{text-align:right;padding:10px 8px;border-bottom:1px solid var(--line);font-size:14px}
+th{color:var(--muted);font-weight:600}
+.low{color:var(--bad);font-weight:700}
+.order{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:12px 14px;margin-bottom:10px;cursor:pointer}
+.order:hover{border-color:var(--gold)}
+.order h3{margin:0;font-size:16px}
+.order p{margin:0;font-size:13px;color:var(--muted)}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;border:1px solid var(--gold);color:var(--gold)}
+.badge.s-shipped,.badge.s-transit{background:var(--gold);color:#000}
+.badge.s-delivered{border-color:var(--ok);color:var(--ok)}
+.carrier{display:inline-block;margin-inline-start:6px;font-size:12px;color:var(--gold2)}
+.bar{display:flex;gap:6px;flex-wrap:wrap}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:16px;z-index:20}
+.modal.open{display:flex}
+.box{background:var(--card);border:1px solid var(--gold);border-radius:14px;width:100%;max-width:460px;max-height:88vh;overflow:auto;padding:18px}
+.box h3{margin:0 0 4px;color:var(--gold)}
+.track{font-size:22px;font-weight:800;color:var(--gold2);direction:ltr;text-align:right;margin:6px 0 12px}
+.tl{list-style:none;margin:0;padding:0;border-inline-start:2px solid var(--line);padding-inline-start:16px}
+.tl li{position:relative;padding:0 0 14px;font-size:14px}
+.tl li::before{content:"";position:absolute;inset-inline-start:-23px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--line)}
+.tl li.d::before{background:var(--gold)}
+.tl li small{display:block;color:var(--muted)}
+.empty{color:var(--muted);text-align:center;padding:24px}
+.row{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+.row.t{font-weight:800;color:var(--gold2);font-size:17px}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--gold);color:#000;font-weight:700;padding:10px 20px;border-radius:999px;display:none;z-index:30}
+@media (prefers-reduced-motion:no-preference){.modal.open .box{animation:pop .18s ease-out}@keyframes pop{from{transform:scale(.96);opacity:0}}}
+</style>
+</head>
+<body>
+<header>
+<svg viewBox="0 0 64 64" fill="none" stroke="#d4af37" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 28c10-14 36-14 46 0-10 12-36 12-46 0z"/><circle cx="27" cy="28" r="7" fill="#d4af37"/><path d="M27 35v14c0 6 8 8 14 4M12 38c-2 6-6 10-8 12"/></svg>
+<div class="brand">حورس HORUS<small>ملابس راقية، لوحة الإدارة (نسخة تجريبية)</small></div>
+</header>
+<nav id="nav"></nav>
+<main id="main"></main>
+
+<div class="modal" id="modal"><div class="box" id="box"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+var ST={new:"جديد",prep:"قيد التجهيز",ready:"جاهز للشحن",shipped:"مع شركة الشحن",transit:"في الطريق",delivered:"تم التسليم"};
+var CARRIERS=["أرامكس","دي إتش إل","سمسا","بوسطة"];
+var products=[
+{id:1,name:"عباية سوداء مطرزة",size:"M",color:"أسود",qty:14,cost:700,price:1450},
+{id:2,name:"جاكيت ذهبي",size:"L",color:"ذهبي",qty:3,cost:1100,price:2100},
+{id:3,name:"قميص كتان",size:"XL",color:"أبيض",qty:22,cost:350,price:780},
+{id:4,name:"بنطلون قماش",size:"M",color:"أسود",qty:2,cost:450,price:920}];
+var nid=5;
+var orders=[
+{id:1001,customer:"سارة أحمد",city:"القاهرة",items:"عباية سوداء مطرزة × 1",total:1450,cogs:700,status:"new",carrier:"",track:"",ev:[]},
+{id:1002,customer:"منى خالد",city:"الإسكندرية",items:"جاكيت ذهبي × 1، قميص كتان × 2",total:3660,cogs:1800,status:"prep",carrier:"",track:"",ev:[]},
+{id:1003,customer:"ليلى حسن",city:"الجيزة",items:"بنطلون قماش × 2",total:1840,cogs:900,status:"ready",carrier:"",track:"",ev:[]},
+{id:1004,customer:"نورا سامي",city:"المنصورة",items:"عباية سوداء مطرزة × 2",total:2900,cogs:1400,status:"delivered",carrier:"أرامكس",track:"HRS40218873EG",ev:[{t:"قبل يومين",x:"استلمت أرامكس الشحنة من مستودع حورس"},{t:"أمس",x:"تم تسليم الشحنة للعميل"}]},
+{id:1005,customer:"هدى عمر",city:"طنطا",items:"قميص كتان × 3",total:2340,cogs:1050,status:"transit",carrier:"بوسطة",track:"HRS77120456EG",ev:[{t:"أمس",x:"استلمت بوسطة الشحنة من مستودع حورس"},{t:"اليوم",x:"وصلت الشحنة لمركز الفرز وخرجت للتوصيل"}]}];
+var tab="home";
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function $(i){return document.getElementById(i)}
+function now(){return new Date().toLocaleString("ar-EG",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}
+function toast(t){var e=$("toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display="none"},2200)}
+function nav(){var t=[["home","نظرة عامة"],["stock","المخزون"],["orders","الطلبات"],["fin","الماليات"]];
+$("nav").innerHTML=t.map(function(x){return '<button class="'+(tab==x[0]?"on":"")+'" onclick="go(\''+x[0]+'\')">'+x[1]+'</button>'}).join("")}
+function go(t){tab=t;render()}
+function render(){nav();$("main").innerHTML=tab=="home"?home():tab=="stock"?stock():tab=="fin"?fin():ordersView()}
+function home(){
+var pcs=products.reduce(function(a,p){return a+p.qty},0);
+var low=products.filter(function(p){return p.qty<=3}).length;
+var open=orders.filter(function(o){return o.status!="delivered"}).length;
+var ship=orders.filter(function(o){return o.status=="shipped"||o.status=="transit"}).length;
+return '<div class="stats"><div class="stat"><b>'+pcs+'</b><span>قطعة في المخزون</span></div><div class="stat"><b>'+open+'</b><span>طلب مفتوح</span></div><div class="stat"><b>'+ship+'</b><span>مع شركة الشحن</span></div><div class="stat"><b>'+low+'</b><span>أصناف قاربت على النفاد</span></div></div>'+
+'<h2>آخر الطلبات</h2>'+orders.slice(0,4).map(orderRow).join("")}
+function stock(){
+return '<h2>إضافة صنف للمخزون</h2><div class="card"><form onsubmit="addP(event)"><div><label>اسم القطعة</label><input id="pn" required></div><div><label>المقاس</label><select id="ps"><option>S</option><option selected>M</option><option>L</option><option>XL</option></select></div><div><label>اللون</label><input id="pc" required></div><div><label>الكمية</label><input id="pq" type="number" min="1" required></div><div><label>سعر التكلفة (ج.م)</label><input id="pk" type="number" min="1" required></div><div><label>سعر البيع (ج.م)</label><input id="pp" type="number" min="1" required></div><button class="btn">إضافة للمخزون</button></form></div>'+
+'<h2>المخزون الحالي</h2><div class="card tw"><table><tr><th>القطعة</th><th>المقاس</th><th>اللون</th><th>الكمية</th><th>التكلفة</th><th>سعر البيع</th><th>الربح للقطعة</th><th></th></tr>'+
+products.map(function(p){return '<tr><td>'+esc(p.name)+'</td><td>'+esc(p.size)+'</td><td>'+esc(p.color)+'</td><td class="'+(p.qty<=3?"low":"")+'">'+p.qty+(p.qty<=3?" (قارب على النفاد)":"")+'</td><td>'+p.cost+'</td><td>'+p.price+'</td><td style="color:var(--ok)">'+(p.price-p.cost)+' ('+Math.round((p.price-p.cost)/p.price*100)+'%)</td><td><button class="btn ghost sm" onclick="addQ('+p.id+')">+5</button></td></tr>'}).join("")+'</table></div>'}
+function addP(e){e.preventDefault();
+products.unshift({id:nid++,name:$("pn").value,size:$("ps").value,color:$("pc").value,qty:+$("pq").value,cost:+$("pk").value,price:+$("pp").value});
+toast("تمت إضافة الصنف");render()}
+function addQ(id){products.forEach(function(p){if(p.id==id)p.qty+=5});toast("تمت إضافة 5 قطع");render()}
+var expenses=[
+{id:1,name:"اشتراك Shopify",cat:"اشتراكات برامج",amount:1500},
+{id:2,name:"إعلانات انستجرام",cat:"إعلانات",amount:3200},
+{id:3,name:"اشتراك Canva",cat:"اشتراكات برامج",amount:300},
+{id:4,name:"أكياس وتغليف",cat:"شحن وتغليف",amount:450}];
+var EC=["اشتراكات برامج","إعلانات","شحن وتغليف","رواتب","إيجار","أخرى"];var eid=5;
+function money(n){return Math.round(n).toLocaleString("en-US")+" ج.م"}
+function fin(){
+var sold=orders.filter(function(o){return o.status=="shipped"||o.status=="transit"||o.status=="delivered"});
+var rev=sold.reduce(function(a,o){return a+o.total},0);
+var cogs=sold.reduce(function(a,o){return a+o.cogs},0);
+var gp=rev-cogs;
+var ex=expenses.reduce(function(a,e){return a+e.amount},0);
+var net=gp-ex;
+var margin=rev?Math.round(net/rev*100):0;
+var invCost=products.reduce(function(a,p){return a+p.qty*p.cost},0);
+var invSale=products.reduce(function(a,p){return a+p.qty*p.price},0);
+var by={};expenses.forEach(function(e){by[e.cat]=(by[e.cat]||0)+e.amount});
+var cs=Object.keys(by).sort(function(a,b){return by[b]-by[a]});
+var nc='var(--'+(net>=0?'ok':'bad')+')';
+return '<div class="stats"><div class="stat"><b>'+money(rev)+'</b><span>المبيعات</span></div><div class="stat"><b>'+money(gp)+'</b><span>مجمل الربح</span></div><div class="stat"><b>'+money(ex)+'</b><span>المصروفات</span></div><div class="stat"><b style="color:'+nc+'">'+money(net)+'</b><span>صافي الربح ('+margin+'%)</span></div></div>'+
+'<h2>كشف الحساب</h2><div class="card"><div class="row"><span>المبيعات</span><span>'+money(rev)+'</span></div><div class="row"><span>تكلفة البضاعة المباعة</span><span>- '+money(cogs)+'</span></div><div class="row t"><span>مجمل الربح</span><span>'+money(gp)+'</span></div><div class="row"><span>المصروفات</span><span>- '+money(ex)+'</span></div><div class="row t"><span>صافي الربح</span><span style="color:'+nc+'">'+money(net)+'</span></div><p style="font-size:12px;color:var(--muted);margin:10px 0 0">المبيعات هي الطلبات اللي خرجت للشحن أو اتسلمت. قيمة المخزون الحالي '+money(invCost)+' بسعر التكلفة و'+money(invSale)+' بسعر البيع.</p></div>'+
+'<h2>إضافة مصروف</h2><div class="card"><form onsubmit="addE(event)"><div><label>البند</label><input id="en" required></div><div><label>النوع</label><select id="ec">'+EC.map(function(c){return '<option>'+c+'</option>'}).join("")+'</select></div><div><label>المبلغ (ج.م)</label><input id="ea" type="number" min="1" required></div><button class="btn">إضافة المصروف</button></form></div>'+
+'<h2>المصروفات حسب النوع</h2><div class="card">'+(cs.length?cs.map(function(c){return '<div style="margin-bottom:10px"><div class="row" style="border:0;padding:0 0 3px"><span>'+c+'</span><span>'+money(by[c])+'</span></div><div style="height:6px;border-radius:3px;background:var(--line)"><div style="height:6px;border-radius:3px;background:var(--gold);width:'+Math.round(by[c]/ex*100)+'%"></div></div></div>'}).join(""):'<div class="empty">لا توجد مصروفات بعد. أضيفي أول مصروف من النموذج أعلاه.</div>')+'</div>'+
+'<h2>كل المصروفات</h2><div class="card tw"><table><tr><th>البند</th><th>النوع</th><th>المبلغ</th><th></th></tr>'+expenses.map(function(e){return '<tr><td>'+esc(e.name)+'</td><td>'+esc(e.cat)+'</td><td>'+money(e.amount)+'</td><td><button class="btn ghost sm" onclick="delE('+e.id+')">حذف</button></td></tr>'}).join("")+'</table></div>'}
+function addE(e){e.preventDefault();expenses.unshift({id:eid++,name:$("en").value,cat:$("ec").value,amount:+$("ea").value});toast("تمت إضافة المصروف");render()}
+function delE(id){expenses=expenses.filter(function(e){return e.id!=id});toast("تم حذف المصروف");render()}
+function orderRow(o){
+return '<div class="order" onclick="openO('+o.id+')"><div><h3>طلب #'+o.id+' <span class="badge s-'+o.status+'">'+ST[o.status]+'</span>'+(o.carrier?'<span class="carrier">'+esc(o.carrier)+'</span>':'')+'</h3><p>'+esc(o.customer)+'، '+esc(o.city)+' | '+esc(o.items)+' | '+o.total+' ج.م</p></div><div class="bar" onclick="event.stopPropagation()">'+actions(o)+'</div></div>'}
+function actions(o){
+if(o.status=="new")return '<button class="btn sm" onclick="step('+o.id+',\'prep\')">بدء التجهيز</button>';
+if(o.status=="prep")return '<button class="btn sm" onclick="step('+o.id+',\'ready\')">تم التجهيز</button>';
+if(o.status=="ready")return '<button class="btn sm" onclick="pick('+o.id+')">استلمتها شركة الشحن</button>';
+return '<button class="btn ghost sm" onclick="openO('+o.id+')">تتبع الشحنة</button>'}
+function ordersView(){return '<h2>الطلبات</h2>'+(orders.length?orders.map(orderRow).join(""):'<div class="empty">لا توجد طلبات بعد.</div>')}
+function step(id,s){orders.forEach(function(o){if(o.id==id)o.status=s});toast(ST[s]);render()}
+function find(id){return orders.filter(function(o){return o.id==id})[0]}
+function pick(id){
+var o=find(id);
+$("box").innerHTML='<h3>تسليم طلب #'+o.id+' لشركة الشحن</h3><p style="color:var(--muted);font-size:14px">اختاري شركة الشحن التي استلمت الشحنة.</p><label>شركة الشحن</label><select id="cs">'+CARRIERS.map(function(c){return '<option>'+c+'</option>'}).join("")+'</select><div class="bar" style="margin-top:14px"><button class="btn" onclick="confirmShip('+id+')">تأكيد الاستلام</button><button class="btn ghost" onclick="closeM()">إلغاء</button></div>';
+$("modal").classList.add("open")}
+function confirmShip(id){
+var o=find(id);o.carrier=$("cs").value;
+o.track="HRS"+Math.floor(10000000+Math.random()*89999999)+"EG";
+o.status="shipped";
+o.ev=[{t:now(),x:"استلمت "+o.carrier+" الشحنة من مستودع حورس"}];
+closeM();toast("الطلب الآن مع "+o.carrier);render();openO(id)}
+var NEXT=[["transit","وصلت الشحنة لمركز الفرز وخرجت للتوصيل"],["transit","الشحنة مع المندوب وفي الطريق للعميل"],["delivered","تم تسليم الشحنة للعميل"]];
+function openO(id){
+var o=find(id);var h='<h3>طلب #'+o.id+'</h3><p style="margin:0 0 8px;color:var(--muted);font-size:14px">'+esc(o.customer)+'، '+esc(o.city)+'<br>'+esc(o.items)+'</p><span class="badge s-'+o.status+'">'+ST[o.status]+'</span>';
+if(o.track){
+h+='<p style="margin:14px 0 0;font-size:13px;color:var(--muted)">شركة الشحن: <b style="color:var(--gold2)">'+esc(o.carrier)+'</b><br>رقم التتبع</p><div class="track">'+o.track+'</div><ul class="tl">'+
+o.ev.slice().reverse().map(function(e){return '<li class="d">'+esc(e.x)+'<small>'+e.t+'</small></li>'}).join("")+'</ul>';
+if(o.status!="delivered")h+='<button class="btn" style="margin-top:6px" onclick="advance('+id+')">تحديث التتبع (محاكاة)</button> ';
+}else h+='<p style="margin-top:14px;color:var(--muted);font-size:14px">لم تُسلَّم الشحنة لشركة الشحن بعد. بعد انتهاء التجهيز اضغطي على استلمتها شركة الشحن ليظهر التتبع هنا.</p>';
+h+=' <button class="btn ghost" style="margin-top:6px" onclick="closeM()">إغلاق</button>';
+$("box").innerHTML=h;$("modal").classList.add("open")}
+function advance(id){
+var o=find(id);var n=o.ev.length-1;if(n>2)return;
+var s=NEXT[n];o.status=s[0];o.ev.push({t:now(),x:s[1]});render();openO(id)}
+function closeM(){$("modal").classList.remove("open")}
+$("modal").addEventListener("click",function(e){if(e.target==this)closeM()});
+render();
+</script>
+</body>
+</html>
